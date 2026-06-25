@@ -29,8 +29,14 @@ def validate_login(username, password):
 
 def main():
     print("Authentication Demo")
-    result = validate_login("admin", "password")
-    print(f"Login result: {result}")
+
+    # Test valid login
+    result = validate_login("admin", "password123")
+    print(f"Login result for 'admin': {result}")
+
+    # Test invalid short username
+    result = validate_login("ab", "password123")
+    print(f"Login result for short username: {result}")
 
 
 if __name__ == "__main__":
