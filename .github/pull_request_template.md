@@ -1,5 +1,5 @@
 ## Jira Ticket
-**Jira:** REPLACE_WITH_TICKET_NUMBER
+**Jira:** <<<RHCLOUD-1234>>>
 
 ## Description
 <!-- Provide a brief description of the changes in this PR -->
