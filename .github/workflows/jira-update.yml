@@ -1,15 +1,18 @@
-name: Update Jira with AI Analysis
+name: Jira Integration
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened, closed]
 
 jobs:
+  # Always validate Jira ticket when PR is opened or updated
   validate-ticket:
+    if: github.event.action != 'closed'
     uses: rhpds/rhpds-workflows/.github/workflows/validate-jira-ticket.yml@main
 
+  # Only run AI analysis and update Jira when PR is MERGED
   jira-analysis:
-    needs: validate-ticket
+    if: github.event.pull_request.merged == true
     uses: rhpds/rhpds-workflows/.github/workflows/jira-ai-update.yml@main
     secrets:
       MAAS_API_KEY: ${{ secrets.PH_MAAS_API_TOKEN }}
