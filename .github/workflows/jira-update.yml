@@ -1,14 +1,15 @@
 name: Update Jira with AI Analysis
 
 on:
-  push:
-    branches:
-      - main
-      - master
-      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
+  validate-ticket:
+    uses: rhpds/rhpds-workflows/.github/workflows/validate-jira-ticket.yml@main
+
   jira-analysis:
+    needs: validate-ticket
     uses: rhpds/rhpds-workflows/.github/workflows/jira-ai-update.yml@main
     secrets:
       MAAS_API_KEY: ${{ secrets.PH_MAAS_API_TOKEN }}
