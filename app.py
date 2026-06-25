@@ -8,7 +8,16 @@ def validate_login(username, password):
     if not username or not password:
         return False
 
+    # Username must be at least 3 characters
+    if len(username) < 3:
+        return False
+
+    # Password must be at least 8 characters
     if len(password) < 8:
+        return False
+
+    # Username should only contain alphanumeric characters
+    if not username.isalnum():
         return False
 
     # TODO: Add actual password validation against database
