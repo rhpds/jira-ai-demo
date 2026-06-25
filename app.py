@@ -35,40 +35,49 @@ def check_password_strength(password):
 
 def validate_login(username, password):
     """Validate user login credentials"""
-    logger.info(f"Login attempt for username: {username}")
+    try:
+        logger.info(f"Login attempt for username: {username}")
 
-    # Improved validation with explicit checks
-    if not username or not password:
-        logger.warning(f"Login failed for {username}: Empty username or password")
+        # Improved validation with explicit checks
+        if not username or not password:
+            logger.warning(f"Login failed for {username}: Empty username or password")
+            return False
+    except Exception as e:
+        logger.error(f"Unexpected error during login validation: {e}")
         return False
 
-    # Username must be at least 3 characters
-    if len(username) < 3:
-        logger.warning(f"Login failed for {username}: Username too short")
+        # Username must be at least 3 characters
+        if len(username) < 3:
+            logger.warning(f"Login failed for {username}: Username too short")
+            return False
+
+        # Password must be at least 8 characters
+        if len(password) < 8:
+            logger.warning(f"Login failed for {username}: Password too short")
+            return False
+
+        # Password must have minimum strength score of 3
+        try:
+            strength = check_password_strength(password)
+            if strength < 3:
+                logger.warning(f"Login failed for {username}: Password too weak (score: {strength})")
+                return False
+        except Exception as e:
+            logger.error(f"Error checking password strength for {username}: {e}")
+            return False
+
+        # Username should only contain alphanumeric characters
+        if not username.isalnum():
+            logger.warning(f"Login failed for {username}: Invalid characters in username")
+            return False
+
+        # TODO: Add actual password validation against database
+        if username == "admin" and password == "password123":
+            logger.info(f"Login successful for {username}")
+            return True
+
+        logger.warning(f"Login failed for {username}: Invalid credentials")
         return False
-
-    # Password must be at least 8 characters
-    if len(password) < 8:
-        logger.warning(f"Login failed for {username}: Password too short")
-        return False
-
-    # Password must have minimum strength score of 3
-    if check_password_strength(password) < 3:
-        logger.warning(f"Login failed for {username}: Password too weak")
-        return False
-
-    # Username should only contain alphanumeric characters
-    if not username.isalnum():
-        logger.warning(f"Login failed for {username}: Invalid characters in username")
-        return False
-
-    # TODO: Add actual password validation against database
-    if username == "admin" and password == "password123":
-        logger.info(f"Login successful for {username}")
-        return True
-
-    logger.warning(f"Login failed for {username}: Invalid credentials")
-    return False
 
 
 def main():
